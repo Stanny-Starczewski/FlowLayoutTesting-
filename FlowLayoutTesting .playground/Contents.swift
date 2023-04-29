@@ -28,6 +28,8 @@ final class ColorCell: UICollectionViewCell {
 // он же является `UICollectionViewDataSource`, поставщиком данных для коллекции:
 final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
     
+    private let params: GeometricParams
+    
     private let colors: [UIColor] = [
         .black, .blue, .brown,
         .cyan, .green, .orange,
@@ -36,8 +38,9 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
     
     let count: Int
     
-    init(count: Int) {
+    init(count: Int, using params: GeometricParams) {
         self.count = count
+        self.params = params
     }
     
     // MARK: - UICollectionViewDataSource
@@ -67,14 +70,16 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
 //сообщим, что класс SupplementaryCollection реализует протокол UICollectionViewDelegateFlowLayout.
 extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
     
-    //задает размеры ячейки коллекции
+    //задает размеры ячейки коллекции (Расчёт размеров ячейки выполняем на основе значений из структуры params.paddingWidth)
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 40)
+        let availableWidth = collectionView.frame.width - params.paddingWidth
+            let cellWidth =  availableWidth / CGFloat(params.cellCount)
+        return CGSize(width: cellWidth, height: cellWidth * 2 / 3)
     }
     
     //задаeт отступы от краёв коллекци
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        return UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
     }
     
     // отвечает за вертикальные отступы
@@ -84,9 +89,26 @@ extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
     
     // отвечает за горизонтальные отступы между ячейками
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        50
+        params.cellSpacing
     }
     
+}
+
+struct GeometricParams {
+    let cellCount: Int
+    let leftInset: CGFloat
+    let rightInset: CGFloat
+    let cellSpacing: CGFloat
+    // Параметр вычисляется уже при создании, что экономит время на вычислениях при отрисовке коллекции.
+    let paddingWidth: CGFloat
+    
+    init(cellCount: Int, leftInset: CGFloat, rightInset: CGFloat, cellSpacing: CGFloat) {
+        self.cellCount = cellCount
+        self.leftInset = leftInset
+        self.rightInset = rightInset
+        self.cellSpacing = cellSpacing
+        self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
+    }
 }
 
 // Размеры для коллекции:
@@ -95,12 +117,20 @@ let size = CGRect(origin: CGPoint(x: 0, y: 0),
 // Указываем, какой Layout хотим использовать:
 let layout = UICollectionViewFlowLayout()
 
-let helper = SupplementaryCollection(count: 31)
 let collection = UICollectionView(frame: size,
                                   collectionViewLayout: layout)
+
+//экземпляр структуры и передать её в конструктор класса-помощника:
+let params = GeometricParams(cellCount: 5,
+                             leftInset: 10,
+                             rightInset: 10,
+                             cellSpacing: 10)
+let helper = SupplementaryCollection(count: 31, using: params)
+
 // Регистрируем ячейку в коллекции.
 // Регистрируя ячейку, мы сообщаем коллекции, какими типами ячеек она может распоряжаться.
 // При попытке создать ячейку с незарегистрированным идентификатором коллекция выдаст ошибку.
+
 collection.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.identifier)
 collection.backgroundColor = .lightGray
 collection.dataSource = helper
@@ -110,3 +140,16 @@ PlaygroundPage.current.liveView = collection
 
 collection.reloadData()
 
+//так это то куда?
+
+/*
+ // Количество столбцов
+ let cellsPerRow = 4
+ // leftInset и rightInset — отступы слева и справа от границ коллекции, cellSpacing — расстояние между ячейками
+ let paddingWidth: CGFloat = leftInset + rightInset + (cellsPerRow - 1) * cellSpacing
+ // Доступная ширина после вычета отступов
+ let availableWidth = collectionView.frame.width - paddingWidth
+ // Ширина ячейки
+ let cellWidth =  availableWidth / CGFloat(cellsPerRow)
+ return CGSize(width: cellWidth, height: cellWidth * 2 / 3)
+ */
