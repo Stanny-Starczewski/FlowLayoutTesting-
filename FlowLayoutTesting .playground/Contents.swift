@@ -68,7 +68,7 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
 
 // Размеры для коллекции:
 let size = CGRect(origin: CGPoint(x: 0, y: 0),
-                  size: CGSize(width: 400, height: 600))
+                  size: CGSize(width: 300, height: 600))
 // Указываем, какой Layout хотим использовать:
 let layout = UICollectionViewFlowLayout()
 
