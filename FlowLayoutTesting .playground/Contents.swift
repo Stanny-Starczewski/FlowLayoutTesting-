@@ -64,15 +64,29 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
     }
 }
     // MARK: - UICollectionViewDelegateFlowLayout
+//сообщим, что класс SupplementaryCollection реализует протокол UICollectionViewDelegateFlowLayout.
 extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
     
+    //задает размеры ячейки коллекции
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 40)
     }
     
+    //задаeт отступы от краёв коллекци
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
+    
+    // отвечает за вертикальные отступы
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        10
+    }
+    
+    // отвечает за горизонтальные отступы между ячейками
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        50
+    }
+    
 }
 
 // Размеры для коллекции:
