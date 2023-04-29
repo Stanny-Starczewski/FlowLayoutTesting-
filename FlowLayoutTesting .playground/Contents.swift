@@ -62,13 +62,17 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
         
         return cell
     }
-
+}
     // MARK: - UICollectionViewDelegateFlowLayout
+extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 40)
+    }
 }
 
 // Размеры для коллекции:
 let size = CGRect(origin: CGPoint(x: 0, y: 0),
-                  size: CGSize(width: 300, height: 600))
+                  size: CGSize(width: 400, height: 600))
 // Указываем, какой Layout хотим использовать:
 let layout = UICollectionViewFlowLayout()
 
@@ -81,6 +85,7 @@ let collection = UICollectionView(frame: size,
 collection.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.identifier)
 collection.backgroundColor = .lightGray
 collection.dataSource = helper
+collection.delegate = helper
 
 PlaygroundPage.current.liveView = collection
 
