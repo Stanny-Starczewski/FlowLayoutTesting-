@@ -66,7 +66,7 @@ final class SupplementaryCollection: NSObject, UICollectionViewDataSource {
     // MARK: - UICollectionViewDelegateFlowLayout
 extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 40)
+        return CGSize(width: 200, height: 40)
     }
 }
 
