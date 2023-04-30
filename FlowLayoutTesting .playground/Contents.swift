@@ -72,9 +72,18 @@ extension SupplementaryCollection: UICollectionViewDelegateFlowLayout {
     
     //задает размеры ячейки коллекции (Расчёт размеров ячейки выполняем на основе значений из структуры params.paddingWidth)
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            
         let availableWidth = collectionView.frame.width - params.paddingWidth
-            let cellWidth =  availableWidth / CGFloat(params.cellCount)
-        return CGSize(width: cellWidth, height: cellWidth * 2 / 3)
+        let cellWidth =  availableWidth / CGFloat(params.cellCount)
+        let height: CGFloat
+        // Рассчитаем высоту.
+        if indexPath.row % 6 < 2 {
+            height = 2 / 3
+        } else {
+            height = 1 / 3
+        }
+        return CGSize(width: cellWidth,
+                     height: cellWidth * height)
     }
     
     //задаeт отступы от краёв коллекци
@@ -121,7 +130,7 @@ let collection = UICollectionView(frame: size,
                                   collectionViewLayout: layout)
 
 //экземпляр структуры и передать её в конструктор класса-помощника:
-let params = GeometricParams(cellCount: 5,
+let params = GeometricParams(cellCount: 2,
                              leftInset: 10,
                              rightInset: 10,
                              cellSpacing: 10)
