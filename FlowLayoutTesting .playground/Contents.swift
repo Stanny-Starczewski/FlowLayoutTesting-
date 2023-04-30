@@ -136,10 +136,12 @@ let params = GeometricParams(cellCount: 2,
                              cellSpacing: 10)
 let helper = SupplementaryCollection(count: 31, using: params)
 
+// Изменим направление скроллинга с вертикального (по умолчанию) на горизонтальное.
+layout.scrollDirection = .horizontal
+
 // Регистрируем ячейку в коллекции.
 // Регистрируя ячейку, мы сообщаем коллекции, какими типами ячеек она может распоряжаться.
 // При попытке создать ячейку с незарегистрированным идентификатором коллекция выдаст ошибку.
-
 collection.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.identifier)
 collection.backgroundColor = .lightGray
 collection.dataSource = helper
